@@ -1,4 +1,5 @@
 import random
+import matplotlib.pyplot as plt
 
 k = int(input("Please, provide number of clusters: "))
 observationFile = input("Please, provide path to the file: ")
@@ -6,6 +7,7 @@ print("------------------------------------------")
 valuesList = []
 with open(observationFile, "r") as file:
     fileLines = file.readlines()
+    fileLines.remove(fileLines[0])
     tempList = []
     for list in fileLines:
         tempList = list.split(',')
@@ -102,8 +104,25 @@ def assignClusters():
     print("------------------------------------------")
 
 
+def draw_clusters(clusters, centroidList):
+    colors = ['red', 'blue', 'green', 'orange', 'purple', 'cyan', 'magenta', 'yellow', 'black', 'brown']
+
+    for i, cluster in enumerate(clusters):
+        x = [point[0] for point in cluster]
+        y = [point[1] for point in cluster]
+        plt.scatter(x, y, color=colors[i % len(colors)], label=f'Cluster {i + 1}')
+
+    for i, centroid in enumerate(centroidList):
+        plt.scatter(centroid[0], centroid[1], color='black', marker='x', s=100, label=f'Centroid {i + 1}')
+
+    plt.title("K-means Cluster Visualization")
+    plt.legend()
+    plt.grid(True)
+    plt.show()
+
 
 while(changed):
     calculateCentroids()
     assignClusters()
 
+draw_clusters(clusters, centroidList)
